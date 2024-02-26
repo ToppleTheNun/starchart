@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 15
     environment:
       name: production
-      url: https://richardharrahdotcom.fly.dev
+      url: https://starchart.fly.dev
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
