@@ -268,14 +268,14 @@ export default function Index() {
                     <TabsTrigger value="steelPath">The Steel Path</TabsTrigger>
                   </TabsList>
                 </div>
-                <TabsContent className="flex flex-col gap-2" value="normalMode">
+                <TabsContent className="m-0" value="normalMode">
                   <StarChartCompletion
                     starChartModeCompletion={
                       data.starChartCompletion.normalMode
                     }
                   />
                 </TabsContent>
-                <TabsContent className="flex flex-col gap-2" value="steelPath">
+                <TabsContent className="m-0" value="steelPath">
                   <StarChartCompletion
                     starChartModeCompletion={data.starChartCompletion.steelPath}
                   />
