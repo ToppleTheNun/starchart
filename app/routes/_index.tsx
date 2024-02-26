@@ -149,18 +149,26 @@ function NodeCompletion({
   });
 
   return (
-    <Form className="flex space-x-2" method="POST" {...getFormProps(form)}>
+    <Form className="items-top flex space-x-2" method="POST" {...getFormProps(form)}>
       <Checkbox
         id={fields[starChartNodeCompletion.name].id}
         name={fields[starChartNodeCompletion.name].name}
+        defaultChecked={starChartNodeCompletion.completed}
         type="submit"
       />
-      <label
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        htmlFor={fields[starChartNodeCompletion.name].id}
-      >
-        {starChartNodeCompletion.name}
-      </label>
+      <div className="grid gap-1.5 leading-none">
+        <label
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          htmlFor={fields[starChartNodeCompletion.name].id}
+        >
+          {starChartNodeCompletion.name}
+        </label>
+        {starChartNodeCompletion.requiresGrendelChassisLocator ? <p className="text-sm text-muted-foreground">Requires <span className="font-mono">Grendel Chassis Locator</span></p> : null}
+        {starChartNodeCompletion.requiresGrendelNeuropticsLocator ? <p className="text-sm text-muted-foreground">Requires <span className="font-mono">Grendel Neuroptics Locator</span></p> : null}
+        {starChartNodeCompletion.requiresGrendelSystemsLocator ? <p className="text-sm text-muted-foreground">Requires <span className="font-mono">Grendel Systems Locator</span></p> : null}
+        {starChartNodeCompletion.requiresHeartOfDeimos ? <p className="text-sm text-muted-foreground">Requires completion of <span className="font-mono">Heart of Deimos</span></p> : null}
+        {starChartNodeCompletion.requiresWhispersInTheWalls ? <p className="text-sm text-muted-foreground">Requires completion of <span className="font-mono">Whispers in the Walls</span></p> : null}
+      </div>
     </Form>
   );
 }
@@ -195,7 +203,7 @@ function PlanetCompletion({
         ) : null}
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-2">
           {starChartPlanetCompletion.starChartNodes.map((node) => (
             <NodeCompletion
               key={node.name}
