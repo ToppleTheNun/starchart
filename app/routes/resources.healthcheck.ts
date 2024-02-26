@@ -7,15 +7,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
     request.headers.get("X-Forwarded-Host") ?? request.headers.get("host");
 
   try {
-    await Promise.all([
-      fetch(`${new URL(request.url).protocol}${host}`, {
-        method: "HEAD",
-        headers: { "X-Healthcheck": "true" },
-      }).then((r) => {
-        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-        if (!r.ok) return Promise.reject(r);
-      }),
-    ]);
+    // await Promise.all([
+    //   fetch(`${new URL(request.url).protocol}${host}`, {
+    //     method: "HEAD",
+    //     headers: { "X-Healthcheck": "true" },
+    //   }).then((r) => {
+    //     // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+    //     if (!r.ok) return Promise.reject(r);
+    //   }),
+    // ]);
     return new Response("OK");
   } catch (err: unknown) {
     error("healthcheck ❌", err);
