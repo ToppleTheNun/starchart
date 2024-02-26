@@ -15,7 +15,7 @@ export default defineConfig({
     }),
     sentryVitePlugin({
       org: "topplethenun",
-      project: "mchammer",
+      project: "starchart",
     }),
   ],
 });
