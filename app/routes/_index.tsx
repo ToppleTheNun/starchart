@@ -133,6 +133,7 @@ function NodeCompletion({
   planetName: string;
   starChartNodeCompletion: EnhancedStarChartNodeCompletion;
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   const lastResult = useActionData<typeof action>();
   const [form, fields] = useForm({
     id: planetName,
