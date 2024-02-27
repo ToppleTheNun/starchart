@@ -14,13 +14,13 @@ const data = Object.keys(starChart)
 const template = dedent`
 // This is a generated file, any changes here will be eventually overwritten!
 
-import type { StarChartCompletion, StarChartModeCompletion } from "~/schemas/star-chart-completion.ts";
+import type { StarChartNodesCompletion, StarChartModePlanetNodesCompletion } from "~/schemas/star-chart-completion.ts";
 
-export const starChartModeCompletionDefault: StarChartModeCompletion = [
+export const starChartModeCompletionDefault: StarChartModePlanetNodesCompletion = [
   ${data}
 ];
 
-export const starChartCompletionDefault: StarChartCompletion = {
+export const starChartCompletionDefault: StarChartNodesCompletion = {
   normalMode: starChartModeCompletionDefault,
   steelPath: starChartModeCompletionDefault,
 };

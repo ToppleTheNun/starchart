@@ -46,17 +46,26 @@ const nodeData = Object.entries(starChart)
   })
   .join("\n\n");
 
-const planetSchemasData = Object.keys(starChart)
+const planetNodeCompletionSchemasData = Object.keys(starChart)
   .map(toCamelCase)
   .map((planet) => {
     const transformFn = `(val) => val.filter(is${toPascalCase(planet)}Node)`;
-    return `export const ${planet}Schema = z.object({ planet: z.literal("${planet}"), nodes: z.array(z.string()).transform(${transformFn}).pipe(${toPascalCase(planet)}NodesSchema).catch([]) });`;
+    return dedent`
+      export const ${toPascalCase(planet)}NodeCompletionSchema = z.object({ planet: z.literal("${planet}"), node: ${toPascalCase(planet)}NodeSchema });
+      export type ${toPascalCase(planet)}NodeCompletion = z.infer<typeof ${toPascalCase(planet)}NodeCompletionSchema>;
+      export const ${toPascalCase(planet)}NodesCompletionSchema = z.object({ planet: z.literal("${planet}"), nodes: z.array(z.string()).transform(${transformFn}).pipe(${toPascalCase(planet)}NodesSchema).catch([]) });
+      export type ${toPascalCase(planet)}NodesCompletion = z.infer<typeof ${toPascalCase(planet)}NodesCompletionSchema>;
+    `;
   })
   .join("\n");
 
-const completionSchemaData = Object.entries(starChart)
+const nodeCompletionSchemaData = Object.entries(starChart)
   .map(([key, value]) => [toCamelCase(key), Object.keys(value.nodes)] as const)
-  .map(([planet]) => `${planet}Schema`)
+  .map(([planet]) => `${toPascalCase(planet)}NodeCompletionSchema`)
+  .join(",\n");
+const nodesCompletionSchemaData = Object.entries(starChart)
+  .map(([key, value]) => [toCamelCase(key), Object.keys(value.nodes)] as const)
+  .map(([planet]) => `${toPascalCase(planet)}NodesCompletionSchema`)
   .join(",\n");
 
 const template = dedent`
@@ -75,23 +84,28 @@ ${nodeData}
 // endregion Nodes
 
 // region Planet Schemas
-${planetSchemasData}
+${planetNodeCompletionSchemasData}
 // endregion Planet Schemas
 
 // region Completion
-export const StarChartPlanetCompletionSchema = z.discriminatedUnion("planet", [
-  ${completionSchemaData}
+export const StarChartPlanetNodeCompletionSchema = z.discriminatedUnion("planet", [
+  ${nodeCompletionSchemaData}
+]).and(z.object({ mode: z.enum(["normalMode", "steelPath"]), completed: z.string().toLowerCase().transform((x) => x === 'true').pipe(z.boolean()) }));
+export type StarChartPlanetNodeCompletion = z.infer<typeof StarChartPlanetNodeCompletionSchema>;
+
+export const StarChartPlanetNodesCompletionSchema = z.discriminatedUnion("planet", [
+  ${nodesCompletionSchemaData}
 ]);
-export type StarChartPlanetCompletion = z.infer<typeof StarChartPlanetCompletionSchema>;
+export type StarChartPlanetNodesCompletion = z.infer<typeof StarChartPlanetNodesCompletionSchema>;
 
-export const StarChartModeCompletionSchema = z.array(StarChartPlanetCompletionSchema);
-export type StarChartModeCompletion = z.infer<typeof StarChartModeCompletionSchema>;
+export const StarChartModePlanetNodesCompletionSchema = z.array(StarChartPlanetNodesCompletionSchema);
+export type StarChartModePlanetNodesCompletion = z.infer<typeof StarChartModePlanetNodesCompletionSchema>;
 
-export const StarChartCompletionSchema = z.object({
-  normalMode: StarChartModeCompletionSchema,
-  steelPath: StarChartModeCompletionSchema,
+export const StarChartNodesCompletionSchema = z.object({
+  normalMode: StarChartModePlanetNodesCompletionSchema,
+  steelPath: StarChartModePlanetNodesCompletionSchema,
 });
-export type StarChartCompletion = z.infer<typeof StarChartCompletionSchema>;
+export type StarChartNodesCompletion = z.infer<typeof StarChartNodesCompletionSchema>;
 // endregion Completion
 `;
 

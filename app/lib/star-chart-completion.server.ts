@@ -7,19 +7,22 @@ import type { Timings } from "~/lib/timings.server.ts";
 import { time } from "~/lib/timings.server.ts";
 import type { StarChartNode, StarChartPlanet } from "~/schemas/star-chart.ts";
 import type {
-  StarChartCompletion,
-  StarChartModeCompletion,
-  StarChartPlanetCompletion,
+  CompletablePlanet,
+  StarChartModePlanetNodesCompletion,
+  StarChartNodesCompletion,
+  StarChartPlanetNodesCompletion
 } from "~/schemas/star-chart-completion.ts";
 import {
   completablePlanets,
-  StarChartCompletionSchema,
+  StarChartNodesCompletionSchema,
 } from "~/schemas/star-chart-completion.ts";
 
 function ensureHasEachPlanet(
-  starChartModeCompletion: StarChartModeCompletion,
-): StarChartModeCompletion {
-  const ensured: StarChartModeCompletion = [...starChartModeCompletion];
+  StarChartModePlanetNodesCompletion: StarChartModePlanetNodesCompletion,
+): StarChartModePlanetNodesCompletion {
+  const ensured: StarChartModePlanetNodesCompletion = [
+    ...StarChartModePlanetNodesCompletion,
+  ];
   completablePlanets.forEach((completablePlanet) => {
     const idx = ensured.findIndex(
       (planet) => planet.planet === completablePlanet,
@@ -32,9 +35,9 @@ function ensureHasEachPlanet(
 }
 
 function sortByPlanetNames(
-  starChartModeCompletion: StarChartModeCompletion,
-): StarChartModeCompletion {
-  return [...starChartModeCompletion].sort((a, b) => {
+  StarChartModePlanetNodesCompletion: StarChartModePlanetNodesCompletion,
+): StarChartModePlanetNodesCompletion {
+  return [...StarChartModePlanetNodesCompletion].sort((a, b) => {
     return (
       completablePlanets.indexOf(a.planet) -
       completablePlanets.indexOf(b.planet)
@@ -48,48 +51,48 @@ export type EnhancedStarChartNodeCompletion = StarChartNode & {
 };
 
 export type EnhancedStarChartPlanet = Omit<StarChartPlanet, "nodes"> & {
-  name: string;
+  name: CompletablePlanet;
 };
-export interface EnhancedStarChartPlanetCompletion {
+export interface EnhancedStarChartPlanetNodesCompletion {
   starChartPlanet: EnhancedStarChartPlanet;
   starChartNodes: EnhancedStarChartNodeCompletion[];
 }
 
-function enhanceStarChartPlanetCompletion(
-  starChartPlanetCompletion: StarChartPlanetCompletion,
-): EnhancedStarChartPlanetCompletion {
-  const { nodes, ...planet } = starChart[starChartPlanetCompletion.planet];
+function enhanceStarChartPlanetNodesCompletion(
+  StarChartPlanetNodesCompletion: StarChartPlanetNodesCompletion,
+): EnhancedStarChartPlanetNodesCompletion {
+  const { nodes, ...planet } = starChart[StarChartPlanetNodesCompletion.planet];
   const starChartNodes = Object.entries(
     nodes,
   ).map<EnhancedStarChartNodeCompletion>(([name, node]) => ({
     ...node,
     name,
-    completed: starChartPlanetCompletion.nodes.includes(name),
+    completed: StarChartPlanetNodesCompletion.nodes.includes(name),
   }));
   const starChartPlanet: EnhancedStarChartPlanet = {
     ...planet,
-    name: starChartPlanetCompletion.planet,
+    name: StarChartPlanetNodesCompletion.planet,
   };
   return { starChartPlanet, starChartNodes };
 }
 
-function enhanceStarChartModeCompletion(
-  starChartCompletion: StarChartModeCompletion,
-): EnhancedStarChartPlanetCompletion[] {
+function enhanceStarChartModePlanetNodesCompletion(
+  starChartCompletion: StarChartModePlanetNodesCompletion,
+): EnhancedStarChartPlanetNodesCompletion[] {
   const ensured = ensureHasEachPlanet(starChartCompletion);
   const sorted = sortByPlanetNames(ensured);
-  return sorted.map(enhanceStarChartPlanetCompletion);
+  return sorted.map(enhanceStarChartPlanetNodesCompletion);
 }
 
 export interface EnhancedStarChartCompletion {
-  normalMode: EnhancedStarChartPlanetCompletion[];
-  steelPath: EnhancedStarChartPlanetCompletion[];
+  normalMode: EnhancedStarChartPlanetNodesCompletion[];
+  steelPath: EnhancedStarChartPlanetNodesCompletion[];
 }
 
 async function determineStarChartCompletionFromCookie(
   request: Request,
   timings: Timings,
-): Promise<StarChartCompletion> {
+): Promise<StarChartNodesCompletion> {
   const cookieHeader = request.headers.get(cookie);
   try {
     const starChartCompletionCookieContents: unknown = await time(
@@ -105,9 +108,11 @@ async function determineStarChartCompletionFromCookie(
     }
     return await time(
       () =>
-        StarChartCompletionSchema.parseAsync(starChartCompletionCookieContents),
+        StarChartNodesCompletionSchema.parseAsync(
+          starChartCompletionCookieContents,
+        ),
       {
-        type: "StarChartCompletionSchema.parseAsync",
+        type: "StarChartNodesCompletionSchema.parseAsync",
         desc: "parse star chart completion from cookie contents",
         timings,
       },
@@ -125,10 +130,10 @@ export async function getStarChartCompletion(
   const starChartCompletionFromCookie =
     await determineStarChartCompletionFromCookie(request, timings);
   return {
-    normalMode: enhanceStarChartModeCompletion(
+    normalMode: enhanceStarChartModePlanetNodesCompletion(
       starChartCompletionFromCookie.normalMode,
     ),
-    steelPath: enhanceStarChartModeCompletion(
+    steelPath: enhanceStarChartModePlanetNodesCompletion(
       starChartCompletionFromCookie.steelPath,
     ),
   };

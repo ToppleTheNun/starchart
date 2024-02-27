@@ -10,7 +10,6 @@ import {
   useRouteError,
 } from "@remix-run/react";
 import { captureRemixErrorBoundaryError } from "@sentry/remix";
-import { z } from "zod";
 
 import { SiteFooter } from "~/components/SiteFooter.tsx";
 import { H1, H2, Lead, Paragraph } from "~/components/typography.tsx";
@@ -35,11 +34,15 @@ import { serverTiming } from "~/constants.ts";
 import { info } from "~/lib/log.server.ts";
 import type {
   EnhancedStarChartNodeCompletion,
-  EnhancedStarChartPlanetCompletion,
+  EnhancedStarChartPlanetNodesCompletion,
 } from "~/lib/star-chart-completion.server.ts";
 import { getStarChartCompletion } from "~/lib/star-chart-completion.server.ts";
 import { makeTimings, time } from "~/lib/timings.server.ts";
 import { combineHeaders, getErrorMessage } from "~/lib/utils.ts";
+import {
+  CompletablePlanet,
+  StarChartPlanetNodeCompletionSchema,
+} from "~/schemas/star-chart-completion.ts";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const timings = makeTimings("index loader");
@@ -53,15 +56,22 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  info("Handling request", request);
   const timings = makeTimings("index action");
   const formData = await time(() => request.formData(), {
     type: "request.formData",
     desc: "retrieve form data from request",
     timings,
   });
-  // @ts-expect-error uhhhhh
-  info("Form data:", new URLSearchParams(formData).toString());
+  const submission = parseWithZod(formData, {
+    schema: StarChartPlanetNodeCompletionSchema,
+  });
+  if (submission.status !== "success") {
+    return submission.reply();
+  }
+
+  info("Handling request", submission.value);
+  // const starChartCompletion = await time(() => getStarChartCompletion(request, timings), { type: "getStarChartCompletion", desc: "retrieve star chart completion from cookie", timings });
+
   return redirect("/");
 }
 
@@ -127,57 +137,82 @@ export function ErrorBoundary() {
 }
 
 function NodeCompletion({
+  mode,
   planetName,
   starChartNodeCompletion,
 }: {
-  planetName: string;
+  mode: "normalMode" | "steelPath";
+  planetName: CompletablePlanet;
   starChartNodeCompletion: EnhancedStarChartNodeCompletion;
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   const lastResult = useActionData<typeof action>();
-  const [form, fields] = useForm({
+  const [form] = useForm({
     id: planetName,
     lastResult,
     onValidate: ({ formData }) =>
       parseWithZod(formData, {
-        schema: z.object({
-          [starChartNodeCompletion.name]: z.boolean(),
-        }),
+        schema: StarChartPlanetNodeCompletionSchema,
       }),
-    defaultValue: {
-      [starChartNodeCompletion.name]: starChartNodeCompletion.completed,
-    },
   });
 
   return (
-    <Form className="items-top flex space-x-2" method="POST" {...getFormProps(form)}>
+    <Form
+      className="items-top flex space-x-2"
+      method="POST"
+      {...getFormProps(form)}
+    >
       <Checkbox
-        id={fields[starChartNodeCompletion.name].id}
-        name={fields[starChartNodeCompletion.name].name}
+        id={`${mode}-${planetName}-${starChartNodeCompletion.name}-completed`}
+        name="completed"
         defaultChecked={starChartNodeCompletion.completed}
         type="submit"
       />
       <div className="grid gap-1.5 leading-none">
         <label
           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          htmlFor={fields[starChartNodeCompletion.name].id}
+          htmlFor={`${mode}-${planetName}-${starChartNodeCompletion.name}-completed`}
         >
           {starChartNodeCompletion.name}
         </label>
-        {starChartNodeCompletion.requiresGrendelChassisLocator ? <p className="text-sm text-muted-foreground">Requires <span className="font-mono">Grendel Chassis Locator</span></p> : null}
-        {starChartNodeCompletion.requiresGrendelNeuropticsLocator ? <p className="text-sm text-muted-foreground">Requires <span className="font-mono">Grendel Neuroptics Locator</span></p> : null}
-        {starChartNodeCompletion.requiresGrendelSystemsLocator ? <p className="text-sm text-muted-foreground">Requires <span className="font-mono">Grendel Systems Locator</span></p> : null}
-        {starChartNodeCompletion.requiresHeartOfDeimos ? <p className="text-sm text-muted-foreground">Requires completion of <span className="font-mono">Heart of Deimos</span></p> : null}
-        {starChartNodeCompletion.requiresWhispersInTheWalls ? <p className="text-sm text-muted-foreground">Requires completion of <span className="font-mono">Whispers in the Walls</span></p> : null}
+        {starChartNodeCompletion.requiresGrendelChassisLocator ? (
+          <p className="text-sm text-muted-foreground">
+            Requires <span className="font-mono">Grendel Chassis Locator</span>
+          </p>
+        ) : null}
+        {starChartNodeCompletion.requiresGrendelNeuropticsLocator ? (
+          <p className="text-sm text-muted-foreground">
+            Requires{" "}
+            <span className="font-mono">Grendel Neuroptics Locator</span>
+          </p>
+        ) : null}
+        {starChartNodeCompletion.requiresGrendelSystemsLocator ? (
+          <p className="text-sm text-muted-foreground">
+            Requires <span className="font-mono">Grendel Systems Locator</span>
+          </p>
+        ) : null}
+        {starChartNodeCompletion.requiresHeartOfDeimos ? (
+          <p className="text-sm text-muted-foreground">
+            Requires completion of{" "}
+            <span className="font-mono">Heart of Deimos</span>
+          </p>
+        ) : null}
+        {starChartNodeCompletion.requiresWhispersInTheWalls ? (
+          <p className="text-sm text-muted-foreground">
+            Requires completion of{" "}
+            <span className="font-mono">Whispers in the Walls</span>
+          </p>
+        ) : null}
       </div>
     </Form>
   );
 }
 
 function PlanetCompletion({
+  mode,
   starChartPlanetCompletion,
 }: {
-  starChartPlanetCompletion: EnhancedStarChartPlanetCompletion;
+  mode: "normalMode" | "steelPath";
+  starChartPlanetCompletion: EnhancedStarChartPlanetNodesCompletion;
 }) {
   return (
     <Card>
@@ -207,7 +242,8 @@ function PlanetCompletion({
         <div className="flex flex-col gap-2">
           {starChartPlanetCompletion.starChartNodes.map((node) => (
             <NodeCompletion
-              key={node.name}
+              key={`${mode}-${starChartPlanetCompletion.starChartPlanet.name}-${node.name}`}
+              mode={mode}
               planetName={starChartPlanetCompletion.starChartPlanet.name}
               starChartNodeCompletion={node}
             />
@@ -224,15 +260,18 @@ function PlanetCompletion({
 }
 
 export function StarChartCompletion({
+  mode,
   starChartModeCompletion,
 }: {
-  starChartModeCompletion: EnhancedStarChartPlanetCompletion[];
+  mode: "normalMode" | "steelPath";
+  starChartModeCompletion: EnhancedStarChartPlanetNodesCompletion[];
 }) {
   return (
     <section className="grid w-full gap-y-2 gap-x-1 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
       {starChartModeCompletion.map((completion) => (
         <PlanetCompletion
           key={completion.starChartPlanet.name}
+          mode={mode}
           starChartPlanetCompletion={completion}
         />
       ))}
@@ -270,6 +309,7 @@ export default function Index() {
                 </div>
                 <TabsContent className="m-0" value="normalMode">
                   <StarChartCompletion
+                    mode="normalMode"
                     starChartModeCompletion={
                       data.starChartCompletion.normalMode
                     }
@@ -277,6 +317,7 @@ export default function Index() {
                 </TabsContent>
                 <TabsContent className="m-0" value="steelPath">
                   <StarChartCompletion
+                    mode="steelPath"
                     starChartModeCompletion={data.starChartCompletion.steelPath}
                   />
                 </TabsContent>

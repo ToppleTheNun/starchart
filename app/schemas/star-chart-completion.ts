@@ -520,7 +520,12 @@ export function isZarimanTenTwoNode(x: unknown): x is ZarimanTenTwoNode {
 // endregion Nodes
 
 // region Planet Schemas
-export const mercurySchema = z.object({
+export const MercuryNodeCompletionSchema = z.object({
+  planet: z.literal("mercury"),
+  node: MercuryNodeSchema,
+});
+export type MercuryNodeCompletion = z.infer<typeof MercuryNodeCompletionSchema>;
+export const MercuryNodesCompletionSchema = z.object({
   planet: z.literal("mercury"),
   nodes: z
     .array(z.string())
@@ -528,7 +533,15 @@ export const mercurySchema = z.object({
     .pipe(MercuryNodesSchema)
     .catch([]),
 });
-export const venusSchema = z.object({
+export type MercuryNodesCompletion = z.infer<
+  typeof MercuryNodesCompletionSchema
+>;
+export const VenusNodeCompletionSchema = z.object({
+  planet: z.literal("venus"),
+  node: VenusNodeSchema,
+});
+export type VenusNodeCompletion = z.infer<typeof VenusNodeCompletionSchema>;
+export const VenusNodesCompletionSchema = z.object({
   planet: z.literal("venus"),
   nodes: z
     .array(z.string())
@@ -536,7 +549,13 @@ export const venusSchema = z.object({
     .pipe(VenusNodesSchema)
     .catch([]),
 });
-export const earthSchema = z.object({
+export type VenusNodesCompletion = z.infer<typeof VenusNodesCompletionSchema>;
+export const EarthNodeCompletionSchema = z.object({
+  planet: z.literal("earth"),
+  node: EarthNodeSchema,
+});
+export type EarthNodeCompletion = z.infer<typeof EarthNodeCompletionSchema>;
+export const EarthNodesCompletionSchema = z.object({
   planet: z.literal("earth"),
   nodes: z
     .array(z.string())
@@ -544,7 +563,13 @@ export const earthSchema = z.object({
     .pipe(EarthNodesSchema)
     .catch([]),
 });
-export const marsSchema = z.object({
+export type EarthNodesCompletion = z.infer<typeof EarthNodesCompletionSchema>;
+export const MarsNodeCompletionSchema = z.object({
+  planet: z.literal("mars"),
+  node: MarsNodeSchema,
+});
+export type MarsNodeCompletion = z.infer<typeof MarsNodeCompletionSchema>;
+export const MarsNodesCompletionSchema = z.object({
   planet: z.literal("mars"),
   nodes: z
     .array(z.string())
@@ -552,7 +577,13 @@ export const marsSchema = z.object({
     .pipe(MarsNodesSchema)
     .catch([]),
 });
-export const deimosSchema = z.object({
+export type MarsNodesCompletion = z.infer<typeof MarsNodesCompletionSchema>;
+export const DeimosNodeCompletionSchema = z.object({
+  planet: z.literal("deimos"),
+  node: DeimosNodeSchema,
+});
+export type DeimosNodeCompletion = z.infer<typeof DeimosNodeCompletionSchema>;
+export const DeimosNodesCompletionSchema = z.object({
   planet: z.literal("deimos"),
   nodes: z
     .array(z.string())
@@ -560,7 +591,13 @@ export const deimosSchema = z.object({
     .pipe(DeimosNodesSchema)
     .catch([]),
 });
-export const phobosSchema = z.object({
+export type DeimosNodesCompletion = z.infer<typeof DeimosNodesCompletionSchema>;
+export const PhobosNodeCompletionSchema = z.object({
+  planet: z.literal("phobos"),
+  node: PhobosNodeSchema,
+});
+export type PhobosNodeCompletion = z.infer<typeof PhobosNodeCompletionSchema>;
+export const PhobosNodesCompletionSchema = z.object({
   planet: z.literal("phobos"),
   nodes: z
     .array(z.string())
@@ -568,7 +605,13 @@ export const phobosSchema = z.object({
     .pipe(PhobosNodesSchema)
     .catch([]),
 });
-export const ceresSchema = z.object({
+export type PhobosNodesCompletion = z.infer<typeof PhobosNodesCompletionSchema>;
+export const CeresNodeCompletionSchema = z.object({
+  planet: z.literal("ceres"),
+  node: CeresNodeSchema,
+});
+export type CeresNodeCompletion = z.infer<typeof CeresNodeCompletionSchema>;
+export const CeresNodesCompletionSchema = z.object({
   planet: z.literal("ceres"),
   nodes: z
     .array(z.string())
@@ -576,7 +619,13 @@ export const ceresSchema = z.object({
     .pipe(CeresNodesSchema)
     .catch([]),
 });
-export const jupiterSchema = z.object({
+export type CeresNodesCompletion = z.infer<typeof CeresNodesCompletionSchema>;
+export const JupiterNodeCompletionSchema = z.object({
+  planet: z.literal("jupiter"),
+  node: JupiterNodeSchema,
+});
+export type JupiterNodeCompletion = z.infer<typeof JupiterNodeCompletionSchema>;
+export const JupiterNodesCompletionSchema = z.object({
   planet: z.literal("jupiter"),
   nodes: z
     .array(z.string())
@@ -584,7 +633,15 @@ export const jupiterSchema = z.object({
     .pipe(JupiterNodesSchema)
     .catch([]),
 });
-export const europaSchema = z.object({
+export type JupiterNodesCompletion = z.infer<
+  typeof JupiterNodesCompletionSchema
+>;
+export const EuropaNodeCompletionSchema = z.object({
+  planet: z.literal("europa"),
+  node: EuropaNodeSchema,
+});
+export type EuropaNodeCompletion = z.infer<typeof EuropaNodeCompletionSchema>;
+export const EuropaNodesCompletionSchema = z.object({
   planet: z.literal("europa"),
   nodes: z
     .array(z.string())
@@ -592,7 +649,13 @@ export const europaSchema = z.object({
     .pipe(EuropaNodesSchema)
     .catch([]),
 });
-export const saturnSchema = z.object({
+export type EuropaNodesCompletion = z.infer<typeof EuropaNodesCompletionSchema>;
+export const SaturnNodeCompletionSchema = z.object({
+  planet: z.literal("saturn"),
+  node: SaturnNodeSchema,
+});
+export type SaturnNodeCompletion = z.infer<typeof SaturnNodeCompletionSchema>;
+export const SaturnNodesCompletionSchema = z.object({
   planet: z.literal("saturn"),
   nodes: z
     .array(z.string())
@@ -600,7 +663,13 @@ export const saturnSchema = z.object({
     .pipe(SaturnNodesSchema)
     .catch([]),
 });
-export const uranusSchema = z.object({
+export type SaturnNodesCompletion = z.infer<typeof SaturnNodesCompletionSchema>;
+export const UranusNodeCompletionSchema = z.object({
+  planet: z.literal("uranus"),
+  node: UranusNodeSchema,
+});
+export type UranusNodeCompletion = z.infer<typeof UranusNodeCompletionSchema>;
+export const UranusNodesCompletionSchema = z.object({
   planet: z.literal("uranus"),
   nodes: z
     .array(z.string())
@@ -608,7 +677,13 @@ export const uranusSchema = z.object({
     .pipe(UranusNodesSchema)
     .catch([]),
 });
-export const neptuneSchema = z.object({
+export type UranusNodesCompletion = z.infer<typeof UranusNodesCompletionSchema>;
+export const NeptuneNodeCompletionSchema = z.object({
+  planet: z.literal("neptune"),
+  node: NeptuneNodeSchema,
+});
+export type NeptuneNodeCompletion = z.infer<typeof NeptuneNodeCompletionSchema>;
+export const NeptuneNodesCompletionSchema = z.object({
   planet: z.literal("neptune"),
   nodes: z
     .array(z.string())
@@ -616,7 +691,15 @@ export const neptuneSchema = z.object({
     .pipe(NeptuneNodesSchema)
     .catch([]),
 });
-export const plutoSchema = z.object({
+export type NeptuneNodesCompletion = z.infer<
+  typeof NeptuneNodesCompletionSchema
+>;
+export const PlutoNodeCompletionSchema = z.object({
+  planet: z.literal("pluto"),
+  node: PlutoNodeSchema,
+});
+export type PlutoNodeCompletion = z.infer<typeof PlutoNodeCompletionSchema>;
+export const PlutoNodesCompletionSchema = z.object({
   planet: z.literal("pluto"),
   nodes: z
     .array(z.string())
@@ -624,7 +707,13 @@ export const plutoSchema = z.object({
     .pipe(PlutoNodesSchema)
     .catch([]),
 });
-export const sednaSchema = z.object({
+export type PlutoNodesCompletion = z.infer<typeof PlutoNodesCompletionSchema>;
+export const SednaNodeCompletionSchema = z.object({
+  planet: z.literal("sedna"),
+  node: SednaNodeSchema,
+});
+export type SednaNodeCompletion = z.infer<typeof SednaNodeCompletionSchema>;
+export const SednaNodesCompletionSchema = z.object({
   planet: z.literal("sedna"),
   nodes: z
     .array(z.string())
@@ -632,7 +721,13 @@ export const sednaSchema = z.object({
     .pipe(SednaNodesSchema)
     .catch([]),
 });
-export const erisSchema = z.object({
+export type SednaNodesCompletion = z.infer<typeof SednaNodesCompletionSchema>;
+export const ErisNodeCompletionSchema = z.object({
+  planet: z.literal("eris"),
+  node: ErisNodeSchema,
+});
+export type ErisNodeCompletion = z.infer<typeof ErisNodeCompletionSchema>;
+export const ErisNodesCompletionSchema = z.object({
   planet: z.literal("eris"),
   nodes: z
     .array(z.string())
@@ -640,7 +735,13 @@ export const erisSchema = z.object({
     .pipe(ErisNodesSchema)
     .catch([]),
 });
-export const voidSchema = z.object({
+export type ErisNodesCompletion = z.infer<typeof ErisNodesCompletionSchema>;
+export const VoidNodeCompletionSchema = z.object({
+  planet: z.literal("void"),
+  node: VoidNodeSchema,
+});
+export type VoidNodeCompletion = z.infer<typeof VoidNodeCompletionSchema>;
+export const VoidNodesCompletionSchema = z.object({
   planet: z.literal("void"),
   nodes: z
     .array(z.string())
@@ -648,7 +749,13 @@ export const voidSchema = z.object({
     .pipe(VoidNodesSchema)
     .catch([]),
 });
-export const luaSchema = z.object({
+export type VoidNodesCompletion = z.infer<typeof VoidNodesCompletionSchema>;
+export const LuaNodeCompletionSchema = z.object({
+  planet: z.literal("lua"),
+  node: LuaNodeSchema,
+});
+export type LuaNodeCompletion = z.infer<typeof LuaNodeCompletionSchema>;
+export const LuaNodesCompletionSchema = z.object({
   planet: z.literal("lua"),
   nodes: z
     .array(z.string())
@@ -656,7 +763,15 @@ export const luaSchema = z.object({
     .pipe(LuaNodesSchema)
     .catch([]),
 });
-export const kuvaFortressSchema = z.object({
+export type LuaNodesCompletion = z.infer<typeof LuaNodesCompletionSchema>;
+export const KuvaFortressNodeCompletionSchema = z.object({
+  planet: z.literal("kuvaFortress"),
+  node: KuvaFortressNodeSchema,
+});
+export type KuvaFortressNodeCompletion = z.infer<
+  typeof KuvaFortressNodeCompletionSchema
+>;
+export const KuvaFortressNodesCompletionSchema = z.object({
   planet: z.literal("kuvaFortress"),
   nodes: z
     .array(z.string())
@@ -664,7 +779,17 @@ export const kuvaFortressSchema = z.object({
     .pipe(KuvaFortressNodesSchema)
     .catch([]),
 });
-export const zarimanTenTwoSchema = z.object({
+export type KuvaFortressNodesCompletion = z.infer<
+  typeof KuvaFortressNodesCompletionSchema
+>;
+export const ZarimanTenTwoNodeCompletionSchema = z.object({
+  planet: z.literal("zarimanTenTwo"),
+  node: ZarimanTenTwoNodeSchema,
+});
+export type ZarimanTenTwoNodeCompletion = z.infer<
+  typeof ZarimanTenTwoNodeCompletionSchema
+>;
+export const ZarimanTenTwoNodesCompletionSchema = z.object({
   planet: z.literal("zarimanTenTwo"),
   nodes: z
     .array(z.string())
@@ -672,44 +797,88 @@ export const zarimanTenTwoSchema = z.object({
     .pipe(ZarimanTenTwoNodesSchema)
     .catch([]),
 });
+export type ZarimanTenTwoNodesCompletion = z.infer<
+  typeof ZarimanTenTwoNodesCompletionSchema
+>;
 // endregion Planet Schemas
 
 // region Completion
-export const StarChartPlanetCompletionSchema = z.discriminatedUnion("planet", [
-  mercurySchema,
-  venusSchema,
-  earthSchema,
-  marsSchema,
-  deimosSchema,
-  phobosSchema,
-  ceresSchema,
-  jupiterSchema,
-  europaSchema,
-  saturnSchema,
-  uranusSchema,
-  neptuneSchema,
-  plutoSchema,
-  sednaSchema,
-  erisSchema,
-  voidSchema,
-  luaSchema,
-  kuvaFortressSchema,
-  zarimanTenTwoSchema,
-]);
-export type StarChartPlanetCompletion = z.infer<
-  typeof StarChartPlanetCompletionSchema
+export const StarChartPlanetNodeCompletionSchema = z
+  .discriminatedUnion("planet", [
+    MercuryNodeCompletionSchema,
+    VenusNodeCompletionSchema,
+    EarthNodeCompletionSchema,
+    MarsNodeCompletionSchema,
+    DeimosNodeCompletionSchema,
+    PhobosNodeCompletionSchema,
+    CeresNodeCompletionSchema,
+    JupiterNodeCompletionSchema,
+    EuropaNodeCompletionSchema,
+    SaturnNodeCompletionSchema,
+    UranusNodeCompletionSchema,
+    NeptuneNodeCompletionSchema,
+    PlutoNodeCompletionSchema,
+    SednaNodeCompletionSchema,
+    ErisNodeCompletionSchema,
+    VoidNodeCompletionSchema,
+    LuaNodeCompletionSchema,
+    KuvaFortressNodeCompletionSchema,
+    ZarimanTenTwoNodeCompletionSchema,
+  ])
+  .and(
+    z.object({
+      mode: z.enum(["normalMode", "steelPath"]),
+      completed: z
+        .string()
+        .toLowerCase()
+        .transform((x) => x === "true")
+        .pipe(z.boolean()),
+    }),
+  );
+export type StarChartPlanetNodeCompletion = z.infer<
+  typeof StarChartPlanetNodeCompletionSchema
 >;
 
-export const StarChartModeCompletionSchema = z.array(
-  StarChartPlanetCompletionSchema,
+export const StarChartPlanetNodesCompletionSchema = z.discriminatedUnion(
+  "planet",
+  [
+    MercuryNodesCompletionSchema,
+    VenusNodesCompletionSchema,
+    EarthNodesCompletionSchema,
+    MarsNodesCompletionSchema,
+    DeimosNodesCompletionSchema,
+    PhobosNodesCompletionSchema,
+    CeresNodesCompletionSchema,
+    JupiterNodesCompletionSchema,
+    EuropaNodesCompletionSchema,
+    SaturnNodesCompletionSchema,
+    UranusNodesCompletionSchema,
+    NeptuneNodesCompletionSchema,
+    PlutoNodesCompletionSchema,
+    SednaNodesCompletionSchema,
+    ErisNodesCompletionSchema,
+    VoidNodesCompletionSchema,
+    LuaNodesCompletionSchema,
+    KuvaFortressNodesCompletionSchema,
+    ZarimanTenTwoNodesCompletionSchema,
+  ],
 );
-export type StarChartModeCompletion = z.infer<
-  typeof StarChartModeCompletionSchema
+export type StarChartPlanetNodesCompletion = z.infer<
+  typeof StarChartPlanetNodesCompletionSchema
 >;
 
-export const StarChartCompletionSchema = z.object({
-  normalMode: StarChartModeCompletionSchema,
-  steelPath: StarChartModeCompletionSchema,
+export const StarChartModePlanetNodesCompletionSchema = z.array(
+  StarChartPlanetNodesCompletionSchema,
+);
+export type StarChartModePlanetNodesCompletion = z.infer<
+  typeof StarChartModePlanetNodesCompletionSchema
+>;
+
+export const StarChartNodesCompletionSchema = z.object({
+  normalMode: StarChartModePlanetNodesCompletionSchema,
+  steelPath: StarChartModePlanetNodesCompletionSchema,
 });
-export type StarChartCompletion = z.infer<typeof StarChartCompletionSchema>;
+export type StarChartNodesCompletion = z.infer<
+  typeof StarChartNodesCompletionSchema
+>;
 // endregion Completion
