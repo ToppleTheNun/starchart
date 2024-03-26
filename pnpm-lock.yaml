@@ -18,8 +18,8 @@ dependencies:
     specifier: 1.0.0
     version: 1.0.0
   '@formkit/tempo':
-    specifier: 0.0.10
-    version: 0.0.10
+    specifier: 0.0.19
+    version: 0.0.19
   '@nasa-gcn/remix-seo':
     specifier: 2.0.0
     version: 2.0.0(@remix-run/react@2.6.0)(@remix-run/server-runtime@2.6.0)
@@ -1145,8 +1145,8 @@ packages:
     resolution: {integrity: sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==}
     dev: false
 
-  /@formkit/tempo@0.0.10:
-    resolution: {integrity: sha512-eN5IBf2GAqHKjT2R5pnyRnpBi/1URWho5kjqUOBeLbXHmbYtKnKDGD1RIgXRMEMhr2HLP9HcWLkXSanIV2uyOA==}
+  /@formkit/tempo@0.0.19:
+    resolution: {integrity: sha512-f8Ek6aKVqhQj8keQ1Iy8J8M+soMUDnACf+acPjv8bvlPVVXIdt/7c1jwxk/fp9+VW04ccoG3NRILfdhpMnk20Q==}
     dev: false
 
   /@humanwhocodes/config-array@0.11.14:
