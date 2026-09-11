@@ -90,7 +90,7 @@
     "globals": "14.0.0",
     "lint-staged": "15.2.2",
     "node-html-parser": "6.1.12",
-    "postcss": "8.4.35",
+    "postcss": "8.5.23",
     "prettier": "3.2.5",
     "prettier-plugin-pkg": "0.18.1",
     "simple-git-hooks": "2.9.0",
